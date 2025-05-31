@@ -1,0 +1,45 @@
+# Bytecode Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.env/
+.venv/
+venv/
+ENV/
+env/
+*.env
+
+# Arquivos de configuração/senha
+.env.local
+.env.*.local
+*.sqlite3
+*.db
+
+# Arquivos temporários
+*.log
+*.tmp
+*.swp
+*.bak
+*.old
+
+# Cache e arquivos de build
+.cache/
+build/
+dist/
+*.egg-info/
+
+# Flet runtime files
+.flet/
+flet-build/
+flet-dist/
+
+# VSCode e outros editores
+.vscode/
+.idea/
+*.code-workspace
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
