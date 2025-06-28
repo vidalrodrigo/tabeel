@@ -1,10 +1,10 @@
 FROM python:3.11
 
-WORKDIR /app/backend
+WORKDIR /app/api
 
-COPY backend/ ./
-COPY backend/manage.py ./
-COPY backend/requirements.txt ./
+COPY api/ ./
+COPY api/manage.py ./
+COPY api/requirements.txt ./
 
 RUN pip install --no-cache-dir -r requirements.txt
 

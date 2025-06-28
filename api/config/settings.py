@@ -87,7 +87,7 @@ DATABASES = {
         'PORT': os.environ.get('DB_PORT'),
         'ATOMIC_REQUESTS': True,
         'OPTIONS': {
-            'sslmode': 'require',
+            'sslmode': os.environ.get('SSLMODE'),
         }
     }
 }
