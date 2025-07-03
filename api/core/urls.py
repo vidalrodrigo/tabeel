@@ -1,20 +1,14 @@
 from django.urls import re_path, path
 
 from .views import (
-    AboutViewSet,
-    EmployeeViewSet
+    AboutViewSet, EmployeeViewSet,
+    UserViewSet
 )
 
-from .views_web import (
-    index
-)
 
 urlpatterns = [
-    # API
     re_path(r'^about/?$', AboutViewSet.as_view({'get': 'about'}), name='about'),
     re_path(r'^employee/create/?$', EmployeeViewSet.as_view({'post': 'create'}), name='create'),
-
-    # Páginas HTML
-    path('home/', index, name='index'),
-    
+    re_path(r'^user/login/?$', UserViewSet.as_view({'post': 'login'}), name='login'),
+    re_path(r'^user/register/?$', UserViewSet.as_view({'post': 'register'}), name='register'),
 ]

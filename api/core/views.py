@@ -2,8 +2,14 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework import status, viewsets
+from django.contrib.auth.models import User
+from rest_framework.authtoken.models import Token
+
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.permissions import IsAuthenticated
 from .serializers import (
-    EmployeeSerializer
+    EmployeeSerializer,
+    UserSerializer
 )
 from .service import (
     EmployeeService
@@ -14,6 +20,9 @@ from .utils import (
 )
 
 class AboutViewSet(viewsets.ViewSet):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def about(self, request):
         try:
             return Response(
@@ -52,3 +61,34 @@ class EmployeeViewSet(viewsets.ViewSet):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 headers=get_response_headers()
             )
+
+class UserViewSet(viewsets.ViewSet):
+
+    def login(self, request):
+        user = get_object_or_404(User, email=request.data['email'])
+        if not user.check_password(request.data['password']):
+            return Response(
+                {"message": "invalid password"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        token = Token.objects.get_or_create(user=user)
+        # serializer = UserSerializer(instance=user)
+        return Response(
+            {"token": str(token[0])},
+            status=status.HTTP_200_OK
+        )
+
+    def register(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+            user = User.objects.get(username=serializer.data['username'])
+            user.set_password(serializer.data['password'])
+            user.save()
+
+            token = Token.objects.create(user=user)
+            return Response(
+                {"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
+        print(request.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

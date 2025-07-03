@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken',
     'core',
 ]
 
@@ -128,13 +129,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-TEMPLATES[0]['DIRS'] = [
-    os.path.join(BASE_DIR, 'web_app')
-]
+# TEMPLATES[0]['DIRS'] = [
+#     os.path.join(BASE_DIR, 'templates')
+# ]
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'web_app'),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, 'templates'),
+# ]
 
 STATIC_URL = 'static/'
 
