@@ -13,8 +13,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Coleta os arquivos estáticos para produção
 RUN python manage.py collectstatic --noinput
 
-# Aplica as migrations
-RUN python manage.py migrate
 
 # Expõe a porta usada pelo Gunicorn
 EXPOSE 8000
