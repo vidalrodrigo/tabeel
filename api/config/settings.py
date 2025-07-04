@@ -33,8 +33,8 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'dev')  # ou 'production'
 if ENVIRONMENT == 'prod':
     DEBUG = False
     ALLOWED_HOSTS = [
-        "https://tabeel-production.up.railway.app",
-        "https://tabeelweb-production.up.railway.app",
+        "tabeel-production.up.railway.app",
+        "tabeelweb-production.up.railway.app",
     ]
     CORS_ALLOWED_ORIGINS = [
         "https://tabeelweb-production.up.railway.app",
@@ -74,7 +74,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -162,12 +161,9 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# Para produção com WhiteNoise (opcional mas recomendado)
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-DEBUG = os.environ.get('DEBUG', 'False') == 'True'
