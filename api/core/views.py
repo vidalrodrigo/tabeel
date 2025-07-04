@@ -31,6 +31,7 @@ class AboutViewSet(viewsets.ViewSet):
                 headers=get_response_headers()
             )
         except Exception as e:
+            print(str(e))
             return Response(
                 {'message': f'acesso com erro: {str(e)}'},
                 status.HTTP_403_FORBIDDEN,
@@ -56,6 +57,7 @@ class EmployeeViewSet(viewsets.ViewSet):
                 headers=get_response_headers()
             )
         except Exception as e:
+            print(str(e))
             return Response(
                 data={"message": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR,
@@ -65,30 +67,46 @@ class EmployeeViewSet(viewsets.ViewSet):
 class UserViewSet(viewsets.ViewSet):
 
     def login(self, request):
-        user = get_object_or_404(User, email=request.data['email'])
-        if not user.check_password(request.data['password']):
+        try:
+            user = get_object_or_404(User, email=request.data['email'])
+            if not user.check_password(request.data['password']):
+                return Response(
+                    {"message": "invalid password"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            token = Token.objects.get_or_create(user=user)
+            # serializer = UserSerializer(instance=user)
             return Response(
-                {"message": "invalid password"},
-                status=status.HTTP_400_BAD_REQUEST
+                {"token": str(token[0])},
+                status=status.HTTP_200_OK
             )
-        token = Token.objects.get_or_create(user=user)
-        # serializer = UserSerializer(instance=user)
-        return Response(
-            {"token": str(token[0])},
-            status=status.HTTP_200_OK
-        )
+        except Exception as e:
+            print(str(e))
+            return Response(
+                data={"message": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                headers=get_response_headers()
+            )
 
     def register(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
+        try:
+            serializer = UserSerializer(data=request.data)
+            if serializer.is_valid(raise_exception=True):
+                serializer.save()
 
-            user = User.objects.get(username=serializer.data['username'])
-            user.set_password(serializer.data['password'])
-            user.save()
+                user = User.objects.get(username=serializer.data['username'])
+                user.set_password(serializer.data['password'])
+                user.save()
 
-            token = Token.objects.create(user=user)
+                token = Token.objects.create(user=user)
+                return Response(
+                    {"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
+            print(request.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            print(str(e))
             return Response(
-                {"token": token.key, "user": serializer.data}, status=status.HTTP_201_CREATED)
-        print(request.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                data={"message": str(e)},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                headers=get_response_headers()
+            )
