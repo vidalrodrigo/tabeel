@@ -26,9 +26,25 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Ambiente: define produção ou local
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'dev')  # ou 'production'
 
-ALLOWED_HOSTS = ['*']
+# Segurança: Hosts permitidos
+if ENVIRONMENT == 'prod':
+    DEBUG = False
+    ALLOWED_HOSTS = ['https://tabeel-production.up.railway.app']
+    CORS_ALLOWED_ORIGINS = [
+        "https://tabeelweb-production.up.railway.app",
+    ]
+else:
+    DEBUG = True
+    ALLOWED_HOSTS = ['*']
+    CORS_ALLOWED_ORIGINS = [
+        "http://localhost:3000",
+    ]
+
+# Sempre necessário
+CORS_ALLOW_CREDENTIALS = True # se for usar login com sessão ou cookies
 
 
 # Application definition
@@ -42,6 +58,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
+    'corsheaders',
     'core',
 ]
 
@@ -54,6 +71,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
