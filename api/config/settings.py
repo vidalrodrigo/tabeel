@@ -32,7 +32,10 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'dev')  # ou 'production'
 # Segurança: Hosts permitidos
 if ENVIRONMENT == 'prod':
     DEBUG = False
-    ALLOWED_HOSTS = ['https://tabeel-production.up.railway.app']
+    ALLOWED_HOSTS = [
+        "https://tabeel-production.up.railway.app",
+        "https://tabeelweb-production.up.railway.app",
+    ]
     CORS_ALLOWED_ORIGINS = [
         "https://tabeelweb-production.up.railway.app",
     ]
